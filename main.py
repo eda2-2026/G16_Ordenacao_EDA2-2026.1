@@ -1,0 +1,2 @@
+from algoritmos.selection import selectionSort
+from algoritmos.insertion import insertionSort
