@@ -14,9 +14,12 @@ O projeto implementa um sistema de gerenciamento de encomendas com operações d
 
 ```
 .
-├── main.py              # Ponto de entrada e menu principal
-├── encomenda.py         # Modelo e lógica CRUD das encomendas
+├── main.py              # Ponto de entrada e menu interativo
+├── encomenda.py         # Modelo de dados: classe Encomenda
+├── gerenciador.py       # GerenciadorEncomendas: CRUD + ordenação
+├── test.md              # Guia de testes passo a passo
 └── algoritmos/
+    ├── __init__.py      # Expõe o dicionário ALGORITMOS
     ├── insertion.py     # Insertion Sort
     ├── selection.py     # Selection Sort
     ├── counting.py      # Counting Sort
