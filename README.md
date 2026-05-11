@@ -2,22 +2,26 @@
 
 Trabalho 2 da disciplina de Estruturas de Dados 2 (EDA2 - 2026.1), ministrada pelo Prof. Maurício Serrano — UnB.
 
-O projeto implementa um sistema de gerenciamento de encomendas com operações de CRUD e ordenação por diferentes algoritmos.
+O projeto implementa um sistema de gerenciamento de encomendas com CRUD, ordenação por múltiplos algoritmos, modo CLI e uma API com interface web.
 
 ## Integrantes
 
 | Nome | Matrícula | GitHub |
 |------|-----------|--------|
 | Caio Sabino | 231026302 | [@caiomsabino](https://github.com/caiomsabino) |
+| João Victor Sapiência | 231026400 | [@JoaoSapiencia](https://github.com/JoaoSapiencia) |
 
 ## Estrutura do Projeto
 
 ```
 .
-├── main.py              # Ponto de entrada e menu interativo
+├── api.py               # API FastAPI + rotas de ordenação
+├── dados.json           # Massa de dados inicial (opcional)
 ├── encomenda.py         # Modelo de dados: classe Encomenda
 ├── gerenciador.py       # GerenciadorEncomendas: CRUD + ordenação
-├── test.md              # Guia de testes passo a passo
+├── index.html           # Interface web (consome a API)
+├── main.py              # Ponto de entrada e menu interativo (CLI)
+├── requirements.txt     # Dependências da API
 └── algoritmos/
     ├── __init__.py      # Expõe o dicionário ALGORITMOS
     ├── insertion.py     # Insertion Sort
@@ -28,7 +32,7 @@ O projeto implementa um sistema de gerenciamento de encomendas com operações d
     └── radix_msd.py     # Radix Sort (MSD)
 ```
 
-## Funcionamento
+## Modelo de dados
 
 Cada encomenda cadastrada possui os seguintes atributos:
 
@@ -41,15 +45,15 @@ Cada encomenda cadastrada possui os seguintes atributos:
 | `quantidade` | Quantidade de itens |
 | `prioridade` | Nível de prioridade da entrega |
 
-### Operações disponíveis
+## Operações disponíveis
 
 - **Criar** — cadastrar nova encomenda
 - **Listar** — exibir todas as encomendas
 - **Atualizar** — editar atributos de uma encomenda existente
 - **Remover** — excluir uma encomenda pelo ID
-- **Ordenar** - escolhe um dos atributos disponíveis e escolhe algum dos algoritmos possíveis
+- **Ordenar** — escolher atributo e algoritmo de ordenação
 
-### Algoritmos de ordenação
+## Algoritmos de ordenação
 
 As encomendas podem ser ordenadas por qualquer atributo usando os algoritmos abaixo:
 
@@ -68,13 +72,31 @@ As encomendas podem ser ordenadas por qualquer atributo usando os algoritmos aba
 
 - Python 3.10 ou superior
 
-## Como executar
+## Como executar (CLI)
 
 ```bash
-# Clone o repositório
-git clone <url-do-repositorio>
-cd G16_Ordenacao_EDA2-2026.1
-
-# Execute o sistema
 python main.py
 ```
+
+## Como executar (API + Interface Web)
+
+Instale as dependências:
+
+```bash
+pip install -r requirements.txt
+```
+
+Inicie o servidor:
+
+```bash
+uvicorn api:app --reload
+```
+
+Depois acesse:
+
+- http://localhost:8000/ (interface web)
+
+## Observações
+
+- Se o arquivo `dados.json` existir, ele é carregado no início; caso contrário, o sistema começa vazio.
+- A rota `/ordenar` retorna também o tempo de execução da ordenação em `tempo_ms`.
