@@ -5,6 +5,8 @@ from pydantic import BaseModel
 from datetime import date
 from gerenciador import GerenciadorEncomendas
 from algoritmos import ALGORITMOS
+import random
+from datetime import date, timedelta
 
 # 1. Inicialização
 app = FastAPI(title="Sistema de Logística - Ordenação")
@@ -55,3 +57,24 @@ def ordenar_encomendas(atributo: str, algoritmo: str):
         
     resultado = g.ordenar(atributo, algoritmo)
     return resultado
+
+@app.post("/gerar-teste/{quantidade}")
+def gerar_massa_teste(quantidade: int):
+    # Listas de palavras para gerar nomes de produtos realistas
+    tipos = ["Notebook", "Monitor", "Cadeira", "Teclado", "Mouse", "Mesa", "Gabinete", "Placa", "Cabo"]
+    marcas = ["Dell", "Razer", "Logitech", "Corsair", "Asus", "Acer", "LG", "Samsung"]
+    
+    data_base = date.today()
+
+    for _ in range(quantidade):
+        nome_aleatorio = f"{random.choice(tipos)} {random.choice(marcas)} {random.randint(100, 999)}"
+        # Gera uma data aleatória nos últimos 365 dias
+        data_aleatoria = data_base - timedelta(days=random.randint(0, 365))
+        peso_aleatorio = round(random.uniform(0.1, 50.0), 2)
+        qtd_aleatoria = random.randint(1, 100)
+        prio_aleatoria = random.randint(1, 5)
+
+        # Injeta direto no gerenciador
+        g.criar(nome_aleatorio, data_aleatoria, peso_aleatorio, qtd_aleatoria, prio_aleatoria)
+
+    return {"mensagem": f"{quantidade} encomendas geradas com sucesso!"}

@@ -44,6 +44,13 @@
                     + Cadastrar Encomenda no Sistema
                 </button>
             </form>
+            </form>
+            
+            <div class="mt-4 pt-4 border-t border-gray-200 text-center">
+                <button onclick="gerarMassaTeste(300)" class="bg-red-600 text-white px-6 py-2 rounded-lg hover:bg-red-700 font-bold text-sm shadow-md transition-colors">
+                    Teste de Estresse: Gerar 300 Encomendas Aleatórias
+                </button>
+            </div>
         </div>
 
         <div class="mb-6 bg-blue-50 p-6 border border-blue-100 rounded-lg">
@@ -179,6 +186,29 @@
         
         // Inicializa a tabela com a ordenação padrão (ID) ao carregar a página
         window.onload = ordenar;
+
+        // Função do Teste de Estresse
+        async function gerarMassaTeste(quantidade) {
+            // Confirmação para evitar cliques acidentais
+            if(!confirm(`Tem certeza que deseja injetar ${quantidade} encomendas aleatórias no sistema?`)) return;
+
+            try {
+                // Chama a nova rota do backend
+                const resposta = await fetch(`http://localhost:8000/gerar-teste/${quantidade}`, {
+                    method: 'POST'
+                });
+
+                if (resposta.ok) {
+                    alert(`${quantidade} itens gerados! Prepare-se para ver a diferença de performance.`);
+                    // Chama a ordenação para atualizar a tabela com os 1000+ itens
+                    ordenar();
+                } else {
+                    alert("Erro ao gerar dados.");
+                }
+            } catch (error) {
+                alert("Erro ao comunicar com o servidor.");
+            }
+        }
     </script>
 </body>
 </html>
