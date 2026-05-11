@@ -1,30 +1,17 @@
 [
-  {
-    "nome": "Notebook Dell",
-    "data_postagem": "2026-05-10",
-    "peso": 2.5,
-    "quantidade": 1,
-    "prioridade": 5
-  },
-  {
-    "nome": "Cadeira Ergonômica",
-    "data_postagem": "2026-05-08",
-    "peso": 15.0,
-    "quantidade": 2,
-    "prioridade": 2
-  },
-  {
-    "nome": "Mouse Sem Fio",
-    "data_postagem": "2026-05-11",
-    "peso": 0.2,
-    "quantidade": 5,
-    "prioridade": 1
-  },
-  {
-    "nome": "Monitor Ultrawide",
-    "data_postagem": "2026-05-09",
-    "peso": 7.3,
-    "quantidade": 1,
-    "prioridade": 4
-  }
+  { "nome": "Notebook Dell Vostro", "data_postagem": "2026-05-10", "peso": 2.5, "quantidade": 1, "prioridade": 5 },
+  { "nome": "Cadeira Ergonômica", "data_postagem": "2026-05-08", "peso": 15.0, "quantidade": 2, "prioridade": 2 },
+  { "nome": "Mouse Gamer Sem Fio", "data_postagem": "2026-05-11", "peso": 0.15, "quantidade": 5, "prioridade": 1 },
+  { "nome": "Monitor 27 pol 4K", "data_postagem": "2026-05-09", "peso": 7.3, "quantidade": 1, "prioridade": 4 },
+  { "nome": "Teclado Mecânico RGB", "data_postagem": "2026-04-20", "peso": 1.1, "quantidade": 3, "prioridade": 3 },
+  { "nome": "Impressora Laser Jet", "data_postagem": "2026-05-01", "peso": 12.4, "quantidade": 1, "prioridade": 2 },
+  { "nome": "Smartphone Android 14", "data_postagem": "2026-05-12", "peso": 0.2, "quantidade": 10, "prioridade": 5 },
+  { "nome": "Fone de Ouvido Noise Cancelling", "data_postagem": "2026-04-15", "peso": 0.4, "quantidade": 4, "prioridade": 4 },
+  { "nome": "Webcam Full HD 60fps", "data_postagem": "2026-05-05", "peso": 0.3, "quantidade": 2, "prioridade": 1 },
+  { "nome": "HD Externo 2TB", "data_postagem": "2026-05-03", "peso": 0.5, "quantidade": 8, "prioridade": 3 },
+  { "nome": "Roteador Wi-Fi 6", "data_postagem": "2026-04-28", "peso": 0.8, "quantidade": 1, "prioridade": 2 },
+  { "nome": "Microfone Condensador USB", "data_postagem": "2026-05-07", "peso": 1.5, "quantidade": 1, "prioridade": 4 },
+  { "nome": "Tablet Pro 11", "data_postagem": "2026-05-02", "peso": 0.6, "quantidade": 3, "prioridade": 5 },
+  { "nome": "Estabilizador 1000VA", "data_postagem": "2026-04-10", "peso": 5.2, "quantidade": 1, "prioridade": 1 },
+  { "nome": "Cabo HDMI 2.1 3m", "data_postagem": "2026-05-13", "peso": 0.25, "quantidade": 20, "prioridade": 2 }
 ]

@@ -4,6 +4,7 @@ from encomenda import Encomenda
 from algoritmos import ALGORITMOS
 import json
 import os
+import time
 
 _ATRIBUTOS_VALIDOS = {"nome", "id", "data_postagem", "peso", "quantidade", "prioridade"}
 
@@ -80,7 +81,7 @@ class GerenciadorEncomendas:
         return False
 
 
-    def ordenar(self, atributo: str, algoritmo: str) -> list[Encomenda]:
+    def ordenar(self, atributo: str, algoritmo: str) -> dict:
         if atributo not in _ATRIBUTOS_VALIDOS:
             raise ValueError(
                 f"Atributo inválido: '{atributo}'. Escolha entre: {_ATRIBUTOS_VALIDOS}"
@@ -92,17 +93,29 @@ class GerenciadorEncomendas:
 
         n = len(self._encomendas)
         if n == 0:
-            return []
+            return {"dados": [], "tempo_ms": 0.0}
 
         chaves = [getattr(enc, atributo) for enc in self._encomendas]
         sorted_unique = sorted(set(chaves))
         rank = {k: r for r, k in enumerate(sorted_unique)}
         codificado = [rank[chaves[i]] * n + i for i in range(n)]
 
+        # --- O CRONÔMETRO COMEÇA AQUI ---
+        inicio = time.perf_counter()
         ALGORITMOS[algoritmo](codificado)
+        fim = time.perf_counter()
+        # --- O CRONÔMETRO TERMINA AQUI ---
+
+        tempo_ms = (fim - inicio) * 1000
 
         # Decodifica: posição original = valor % n
-        return [self._encomendas[v % n] for v in codificado]
+        lista_ordenada = [self._encomendas[v % n] for v in codificado]
+        
+        # Agora devolve um dicionário com os dados e o tempo!
+        return {
+            "dados": lista_ordenada,
+            "tempo_ms": round(tempo_ms, 6)
+        }
     
     def carregar_dados_iniciais(self, caminho_arquivo="dados.json"):
         # Verifica se o arquivo JSON existe antes de tentar abrir

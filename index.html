@@ -2,100 +2,154 @@
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
-    <title>Painel Logístico</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema de Logística - Gerenciador de Encomendas</title>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="bg-gray-100 p-8">
+<body class="bg-gray-100 p-4 md:p-8">
 
-    <div class="max-w-4xl mx-auto bg-white p-6 rounded-lg shadow">
-        <h1 class="text-2xl font-bold mb-4 text-gray-800">Gerenciador de Rotas e Encomendas</h1>
+    <div class="max-w-5xl mx-auto bg-white p-6 rounded-xl shadow-lg">
+        <h1 class="text-3xl font-bold mb-6 text-gray-800 border-b pb-4">Gerenciador de Rotas e Encomendas</h1>
         
-        <div class="mb-6 bg-gray-50 p-4 border rounded shadow-sm">
-            <h2 class="text-lg font-semibold mb-3 text-gray-700">Nova Encomenda</h2>
+        <div class="mb-8 bg-gray-50 p-6 border rounded-lg shadow-sm">
+            <h2 class="text-xl font-semibold mb-4 text-gray-700">Nova Encomenda</h2>
             <form id="form-cadastro" onsubmit="cadastrarEncomenda(event)" class="grid grid-cols-1 md:grid-cols-6 gap-4">
                 
-                <input type="text" id="novo-nome" placeholder="Nome do Produto" required class="border p-2 rounded col-span-2">
-                <input type="date" id="nova-data" required class="border p-2 rounded">
-                <input type="number" id="novo-peso" step="0.1" placeholder="Peso (kg)" required class="border p-2 rounded">
-                <input type="number" id="nova-qtd" placeholder="Qtd" required class="border p-2 rounded">
-                <input type="number" id="nova-prio" placeholder="Prioridade" required class="border p-2 rounded">
+                <div class="md:col-span-2">
+                    <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Nome do Produto</label>
+                    <input type="text" id="novo-nome" placeholder="Ex: Placa de Vídeo" required class="w-full border p-2 rounded focus:ring-2 focus:ring-green-500 outline-none">
+                </div>
                 
-                <button type="submit" class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 md:col-span-6 font-bold">
-                    + Cadastrar Encomenda
+                <div>
+                    <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Data Postagem</label>
+                    <input type="date" id="nova-data" required class="w-full border p-2 rounded focus:ring-2 focus:ring-green-500 outline-none">
+                </div>
+                
+                <div>
+                    <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Peso (kg)</label>
+                    <input type="number" id="novo-peso" step="0.01" placeholder="0.00" required class="w-full border p-2 rounded focus:ring-2 focus:ring-green-500 outline-none">
+                </div>
+                
+                <div>
+                    <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Quantidade</label>
+                    <input type="number" id="nova-qtd" placeholder="0" required class="w-full border p-2 rounded focus:ring-2 focus:ring-green-500 outline-none">
+                </div>
+                
+                <div>
+                    <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Prioridade</label>
+                    <input type="number" id="nova-prio" min="1" max="5" placeholder="1-5" required class="w-full border p-2 rounded focus:ring-2 focus:ring-green-500 outline-none">
+                </div>
+                
+                <button type="submit" class="bg-green-600 text-white px-4 py-3 rounded-lg hover:bg-green-700 md:col-span-6 font-bold transition-colors shadow">
+                    + Cadastrar Encomenda no Sistema
                 </button>
             </form>
         </div>
 
-        <div class="flex gap-4 mb-6 bg-gray-50 p-4 border rounded">
-            
-            <select id="atributo" class="border p-2 rounded">
-                <option value="id">ID</option>
-                <option value="nome">Nome</option>
-                <option value="peso">Peso</option>
-                <option value="data_postagem">Data</option>
-                <option value="quantidade">Quantidade</option>
-                <option value="prioridade">Prioridade</option>
-            </select>
+        <div class="mb-6 bg-blue-50 p-6 border border-blue-100 rounded-lg">
+            <h2 class="text-lg font-semibold mb-4 text-blue-800 text-center">Painel de Ordenação e Análise de Algoritmos</h2>
+            <div class="flex flex-col md:flex-row gap-4 justify-center items-end">
+                
+                <div class="w-full md:w-auto">
+                    <label class="block text-xs font-bold text-blue-600 uppercase mb-1">Ordenar por:</label>
+                    <select id="atributo" class="w-full border p-2 rounded bg-white cursor-pointer focus:border-blue-500 outline-none">
+                        <option value="id">ID (Ordem de Chegada)</option>
+                        <option value="nome">Nome do Produto</option>
+                        <option value="peso">Peso da Carga</option>
+                        <option value="data_postagem">Data de Postagem</option>
+                        <option value="quantidade">Quantidade</option>
+                        <option value="prioridade">Nível de Prioridade</option>
+                    </select>
+                </div>
 
-            <select id="algoritmo" class="border p-2 rounded">
-                <option value="selection">Selection Sort</option>
-                <option value="insertion">Insertion Sort</option>
-                <option value="quick">Quick Sort</option>
-                <option value="counting">Counting Sort</option>
-                <option value="radix_lsd">Radix Sort (LSD)</option>
-                <option value="radix_msd">Radix Sort (MSD)</option>
-            </select>
+                <div class="w-full md:w-auto">
+                    <label class="block text-xs font-bold text-blue-600 uppercase mb-1">Algoritmo:</label>
+                    <select id="algoritmo" class="w-full border p-2 rounded bg-white cursor-pointer focus:border-blue-500 outline-none">
+                        <option value="quick">Quick Sort </option>
+                        <option value="radix_lsd">Radix Sort (LSD)</option>
+                        <option value="radix_msd">Radix Sort (MSD)</option>
+                        <option value="counting">Counting Sort</option>
+                        <option value="selection">Selection Sort</option>
+                        <option value="insertion">Insertion Sort</option>
+                    </select>
+                </div>
 
-            <button onclick="ordenar()" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 font-bold">
-                Ordenar Dados
-            </button>
+                <button onclick="ordenar()" class="w-full md:w-auto bg-blue-600 text-white px-8 py-2 rounded-lg hover:bg-blue-700 font-bold transition-transform active:scale-95 shadow-md">
+                    Executar Ordenação
+                </button>
+            </div>
         </div>
 
-        <table class="w-full text-left border-collapse">
-            <thead>
-                <tr class="bg-gray-200">
-                    <th class="p-2 border">ID</th>
-                    <th class="p-2 border">Nome</th>
-                    <th class="p-2 border">Peso</th>
-                    <th class="p-2 border">Data</th>
-                </tr>
-            </thead>
-            <tbody id="tabela-corpo">
-                </tbody>
-        </table>
+        <div id="painel-tempo" class="mb-4 p-3 bg-green-100 border border-green-200 text-green-800 rounded-lg text-center font-mono font-bold hidden">
+            </div>
+
+        <div class="overflow-x-auto">
+            <table class="w-full text-left border-collapse rounded-t-lg overflow-hidden">
+                <thead>
+                    <tr class="bg-gray-800 text-white">
+                        <th class="p-3 border-b border-gray-700">ID</th>
+                        <th class="p-3 border-b border-gray-700">Produto</th>
+                        <th class="p-3 border-b border-gray-700">Data</th>
+                        <th class="p-3 border-b border-gray-700 text-right">Peso</th>
+                        <th class="p-3 border-b border-gray-700 text-center">Qtd</th>
+                        <th class="p-3 border-b border-gray-700 text-center">Prio</th>
+                    </tr>
+                </thead>
+                <tbody id="tabela-corpo" class="text-gray-700">
+                    </tbody>
+            </table>
+        </div>
     </div>
 
     <script>
-        // Função que conversa com o FastAPI
+        // Função principal para ordenar e renderizar a tabela
         async function ordenar() {
             const atributo = document.getElementById('atributo').value;
             const algoritmo = document.getElementById('algoritmo').value;
             
-            // Faz o GET na rota que você criou no Python
-            const resposta = await fetch(`http://localhost:8000/ordenar/${atributo}/${algoritmo}`);
-            const encomendas = await resposta.json();
-            
-            const corpoTabela = document.getElementById('tabela-corpo');
-            corpoTabela.innerHTML = ""; // Limpa a tabela velha
-            
-            // Desenha os novos dados ordenados
-            encomendas.forEach(enc => {
-                const linha = `<tr>
-                    <td class="p-2 border">${enc.id}</td>
-                    <td class="p-2 border">${enc.nome}</td>
-                    <td class="p-2 border">${enc.peso} kg</td>
-                    <td class="p-2 border">${enc.data_postagem}</td>
-                </tr>`;
-                corpoTabela.innerHTML += linha;
-            });
+            try {
+                const resposta = await fetch(`http://localhost:8000/ordenar/${atributo}/${algoritmo}`);
+                const resultado = await resposta.json();
+                
+                const encomendas = resultado.dados;
+                const tempo = resultado.tempo_ms;
+
+                // Exibe o tempo de execução
+                const painelTempo = document.getElementById('painel-tempo');
+                painelTempo.innerText = ` Algoritmo finalizado em: ${tempo.toFixed(6)} ms`;
+                painelTempo.classList.remove('hidden');
+                
+                const corpoTabela = document.getElementById('tabela-corpo');
+                corpoTabela.innerHTML = ""; 
+                
+                encomendas.forEach(enc => {
+                    const linha = `
+                        <tr class="hover:bg-gray-50 transition-colors border-b">
+                            <td class="p-3 font-semibold text-gray-500">${enc.id}</td>
+                            <td class="p-3 font-medium">${enc.nome}</td>
+                            <td class="p-3 text-gray-600">${enc.data_postagem}</td>
+                            <td class="p-3 text-right">${enc.peso.toFixed(2)} kg</td>
+                            <td class="p-3 text-center">${enc.quantidade}</td>
+                            <td class="p-3 text-center">
+                                <span class="px-2 py-1 rounded text-xs font-bold ${
+                                    enc.prioridade >= 4 ? 'bg-red-100 text-red-700' : 'bg-blue-100 text-blue-700'
+                                }">
+                                    P${enc.prioridade}
+                                </span>
+                            </td>
+                        </tr>`;
+                    corpoTabela.innerHTML += linha;
+                });
+            } catch (error) {
+                console.error("Erro ao ordenar:", error);
+                alert("Erro ao conectar com o servidor. Verifique se o FastAPI está rodando.");
+            }
         }
 
-        // Função para cadastrar nova encomenda no Backend
+        // Função para cadastrar nova encomenda
         async function cadastrarEncomenda(event) {
-            // O preventDefault evita que o navegador recarregue a página ao clicar no botão
             event.preventDefault(); 
 
-            // Monta o objeto exatamente como o Pydantic (BaseModel) do FastAPI exige
             const payload = {
                 nome: document.getElementById('novo-nome').value,
                 data_postagem: document.getElementById('nova-data').value,
@@ -104,29 +158,27 @@
                 prioridade: parseInt(document.getElementById('nova-prio').value)
             };
 
-            // Envia o POST para a rota /encomendas
-            const resposta = await fetch('http://localhost:8000/encomendas', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(payload)
-            });
+            try {
+                const resposta = await fetch('http://localhost:8000/encomendas', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
 
-            if (resposta.ok) {
-                // Limpa os campos do formulário após o sucesso
-                document.getElementById('form-cadastro').reset();
-                
-                // Exibe um aviso rápido e já chama a ordenação para atualizar a tabela
-                alert("Encomenda cadastrada com sucesso!");
-                ordenar(); 
-            } else {
-                alert("Erro ao cadastrar encomenda. Verifique os dados.");
+                if (resposta.ok) {
+                    document.getElementById('form-cadastro').reset();
+                    // Após cadastrar, reordena automaticamente para mostrar o novo item
+                    ordenar(); 
+                } else {
+                    alert("Erro nos dados. Verifique os campos.");
+                }
+            } catch (error) {
+                alert("Erro ao enviar cadastro.");
             }
         }
         
-        // Opcional: Carregar a lista padrão assim que a página abrir
-        // ordenar(); 
+        // Inicializa a tabela com a ordenação padrão (ID) ao carregar a página
+        window.onload = ordenar;
     </script>
 </body>
 </html>
