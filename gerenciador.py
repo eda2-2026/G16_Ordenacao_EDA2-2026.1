@@ -2,6 +2,8 @@ from __future__ import annotations
 from datetime import date
 from encomenda import Encomenda
 from algoritmos import ALGORITMOS
+import json
+import os
 
 _ATRIBUTOS_VALIDOS = {"nome", "id", "data_postagem", "peso", "quantidade", "prioridade"}
 
@@ -101,3 +103,26 @@ class GerenciadorEncomendas:
 
         # Decodifica: posição original = valor % n
         return [self._encomendas[v % n] for v in codificado]
+    
+    def carregar_dados_iniciais(self, caminho_arquivo="dados.json"):
+        # Verifica se o arquivo JSON existe antes de tentar abrir
+        if not os.path.exists(caminho_arquivo):
+            print("Arquivo de backup não encontrado. Iniciando vazio.")
+            return
+
+        with open(caminho_arquivo, 'r', encoding='utf-8') as f:
+            dados = json.load(f) # Transforma o texto do JSON em uma lista do Python
+            
+            for item in dados:
+                # O JSON salva a data como texto ("2026-05-10"), 
+                # precisamos converter de volta para o tipo 'date' do Python
+                data_convertida = date.fromisoformat(item["data_postagem"])
+                
+                # Usa a própria função criar que já existe para garantir que o ID seja gerado certo
+                self.criar(
+                    nome=item["nome"],
+                    data_postagem=data_convertida,
+                    peso=item["peso"],
+                    quantidade=item["quantidade"],
+                    prioridade=item["prioridade"]
+                )

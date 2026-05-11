@@ -1,0 +1,30 @@
+[
+  {
+    "nome": "Notebook Dell",
+    "data_postagem": "2026-05-10",
+    "peso": 2.5,
+    "quantidade": 1,
+    "prioridade": 5
+  },
+  {
+    "nome": "Cadeira Ergonômica",
+    "data_postagem": "2026-05-08",
+    "peso": 15.0,
+    "quantidade": 2,
+    "prioridade": 2
+  },
+  {
+    "nome": "Mouse Sem Fio",
+    "data_postagem": "2026-05-11",
+    "peso": 0.2,
+    "quantidade": 5,
+    "prioridade": 1
+  },
+  {
+    "nome": "Monitor Ultrawide",
+    "data_postagem": "2026-05-09",
+    "peso": 7.3,
+    "quantidade": 1,
+    "prioridade": 4
+  }
+]

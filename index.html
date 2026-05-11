@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Painel Logístico</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 p-8">
+
+    <div class="max-w-4xl mx-auto bg-white p-6 rounded-lg shadow">
+        <h1 class="text-2xl font-bold mb-4 text-gray-800">Gerenciador de Rotas e Encomendas</h1>
+        
+        <div class="mb-6 bg-gray-50 p-4 border rounded shadow-sm">
+            <h2 class="text-lg font-semibold mb-3 text-gray-700">Nova Encomenda</h2>
+            <form id="form-cadastro" onsubmit="cadastrarEncomenda(event)" class="grid grid-cols-1 md:grid-cols-6 gap-4">
+                
+                <input type="text" id="novo-nome" placeholder="Nome do Produto" required class="border p-2 rounded col-span-2">
+                <input type="date" id="nova-data" required class="border p-2 rounded">
+                <input type="number" id="novo-peso" step="0.1" placeholder="Peso (kg)" required class="border p-2 rounded">
+                <input type="number" id="nova-qtd" placeholder="Qtd" required class="border p-2 rounded">
+                <input type="number" id="nova-prio" placeholder="Prioridade" required class="border p-2 rounded">
+                
+                <button type="submit" class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 md:col-span-6 font-bold">
+                    + Cadastrar Encomenda
+                </button>
+            </form>
+        </div>
+
+        <div class="flex gap-4 mb-6 bg-gray-50 p-4 border rounded">
+            
+            <select id="atributo" class="border p-2 rounded">
+                <option value="id">ID</option>
+                <option value="nome">Nome</option>
+                <option value="peso">Peso</option>
+                <option value="data_postagem">Data</option>
+                <option value="quantidade">Quantidade</option>
+                <option value="prioridade">Prioridade</option>
+            </select>
+
+            <select id="algoritmo" class="border p-2 rounded">
+                <option value="selection">Selection Sort</option>
+                <option value="insertion">Insertion Sort</option>
+                <option value="quick">Quick Sort</option>
+                <option value="counting">Counting Sort</option>
+                <option value="radix_lsd">Radix Sort (LSD)</option>
+                <option value="radix_msd">Radix Sort (MSD)</option>
+            </select>
+
+            <button onclick="ordenar()" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 font-bold">
+                Ordenar Dados
+            </button>
+        </div>
+
+        <table class="w-full text-left border-collapse">
+            <thead>
+                <tr class="bg-gray-200">
+                    <th class="p-2 border">ID</th>
+                    <th class="p-2 border">Nome</th>
+                    <th class="p-2 border">Peso</th>
+                    <th class="p-2 border">Data</th>
+                </tr>
+            </thead>
+            <tbody id="tabela-corpo">
+                </tbody>
+        </table>
+    </div>
+
+    <script>
+        // Função que conversa com o FastAPI
+        async function ordenar() {
+            const atributo = document.getElementById('atributo').value;
+            const algoritmo = document.getElementById('algoritmo').value;
+            
+            // Faz o GET na rota que você criou no Python
+            const resposta = await fetch(`http://localhost:8000/ordenar/${atributo}/${algoritmo}`);
+            const encomendas = await resposta.json();
+            
+            const corpoTabela = document.getElementById('tabela-corpo');
+            corpoTabela.innerHTML = ""; // Limpa a tabela velha
+            
+            // Desenha os novos dados ordenados
+            encomendas.forEach(enc => {
+                const linha = `<tr>
+                    <td class="p-2 border">${enc.id}</td>
+                    <td class="p-2 border">${enc.nome}</td>
+                    <td class="p-2 border">${enc.peso} kg</td>
+                    <td class="p-2 border">${enc.data_postagem}</td>
+                </tr>`;
+                corpoTabela.innerHTML += linha;
+            });
+        }
+
+        // Função para cadastrar nova encomenda no Backend
+        async function cadastrarEncomenda(event) {
+            // O preventDefault evita que o navegador recarregue a página ao clicar no botão
+            event.preventDefault(); 
+
+            // Monta o objeto exatamente como o Pydantic (BaseModel) do FastAPI exige
+            const payload = {
+                nome: document.getElementById('novo-nome').value,
+                data_postagem: document.getElementById('nova-data').value,
+                peso: parseFloat(document.getElementById('novo-peso').value),
+                quantidade: parseInt(document.getElementById('nova-qtd').value),
+                prioridade: parseInt(document.getElementById('nova-prio').value)
+            };
+
+            // Envia o POST para a rota /encomendas
+            const resposta = await fetch('http://localhost:8000/encomendas', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(payload)
+            });
+
+            if (resposta.ok) {
+                // Limpa os campos do formulário após o sucesso
+                document.getElementById('form-cadastro').reset();
+                
+                // Exibe um aviso rápido e já chama a ordenação para atualizar a tabela
+                alert("Encomenda cadastrada com sucesso!");
+                ordenar(); 
+            } else {
+                alert("Erro ao cadastrar encomenda. Verifique os dados.");
+            }
+        }
+        
+        // Opcional: Carregar a lista padrão assim que a página abrir
+        // ordenar(); 
+    </script>
+</body>
+</html>
