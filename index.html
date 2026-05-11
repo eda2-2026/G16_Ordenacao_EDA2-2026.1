@@ -12,8 +12,10 @@
         <h1 class="text-3xl font-bold mb-6 text-gray-800 border-b pb-4">Gerenciador de Rotas e Encomendas</h1>
         
         <div class="mb-8 bg-gray-50 p-6 border rounded-lg shadow-sm">
-            <h2 class="text-xl font-semibold mb-4 text-gray-700">Nova Encomenda</h2>
-            <form id="form-cadastro" onsubmit="cadastrarEncomenda(event)" class="grid grid-cols-1 md:grid-cols-6 gap-4">
+            <h2 class="text-xl font-semibold mb-4 text-gray-700">Gerenciar Encomenda</h2>
+            <form id="form-cadastro" onsubmit="salvarEncomenda(event)" class="grid grid-cols-1 md:grid-cols-6 gap-4">
+                
+                <input type="hidden" id="encomenda-id" value="">
                 
                 <div class="md:col-span-2">
                     <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Nome do Produto</label>
@@ -40,10 +42,9 @@
                     <input type="number" id="nova-prio" min="1" max="5" placeholder="1-5" required class="w-full border p-2 rounded focus:ring-2 focus:ring-green-500 outline-none">
                 </div>
                 
-                <button type="submit" class="bg-green-600 text-white px-4 py-3 rounded-lg hover:bg-green-700 md:col-span-6 font-bold transition-colors shadow">
+                <button type="submit" id="btn-submit" class="bg-green-600 text-white px-4 py-3 rounded-lg hover:bg-green-700 md:col-span-6 font-bold transition-colors shadow">
                     + Cadastrar Encomenda no Sistema
                 </button>
-            </form>
             </form>
             
             <div class="mt-4 pt-4 border-t border-gray-200 text-center">
@@ -88,7 +89,7 @@
         </div>
 
         <div id="painel-tempo" class="mb-4 p-3 bg-green-100 border border-green-200 text-green-800 rounded-lg text-center font-mono font-bold hidden">
-            </div>
+        </div>
 
         <div class="overflow-x-auto">
             <table class="w-full text-left border-collapse rounded-t-lg overflow-hidden">
@@ -100,10 +101,11 @@
                         <th class="p-3 border-b border-gray-700 text-right">Peso</th>
                         <th class="p-3 border-b border-gray-700 text-center">Qtd</th>
                         <th class="p-3 border-b border-gray-700 text-center">Prio</th>
+                        <th class="p-3 border-b border-gray-700 text-center">Ações</th>
                     </tr>
                 </thead>
                 <tbody id="tabela-corpo" class="text-gray-700">
-                    </tbody>
+                </tbody>
             </table>
         </div>
     </div>
@@ -121,7 +123,6 @@
                 const encomendas = resultado.dados;
                 const tempo = resultado.tempo_ms;
 
-                // Exibe o tempo de execução
                 const painelTempo = document.getElementById('painel-tempo');
                 painelTempo.innerText = ` Algoritmo finalizado em: ${tempo.toFixed(6)} ms`;
                 painelTempo.classList.remove('hidden');
@@ -144,19 +145,40 @@
                                     P${enc.prioridade}
                                 </span>
                             </td>
+                            <td class="p-3 text-center">
+                                <button onclick="prepararEdicao(${enc.id}, '${enc.nome}', '${enc.data_postagem}', ${enc.peso}, ${enc.quantidade}, ${enc.prioridade})" class="text-blue-600 hover:text-blue-800 font-bold mr-3">Editar</button>
+                                <button onclick="deletarEncomenda(${enc.id})" class="text-red-600 hover:text-red-800 font-bold">Excluir</button>
+                            </td>
                         </tr>`;
                     corpoTabela.innerHTML += linha;
                 });
             } catch (error) {
                 console.error("Erro ao ordenar:", error);
-                alert("Erro ao conectar com o servidor. Verifique se o FastAPI está rodando.");
             }
         }
 
-        // Função para cadastrar nova encomenda
-        async function cadastrarEncomenda(event) {
+        // Prepara o formulário para atualizar um item existente
+        function prepararEdicao(id, nome, data, peso, qtd, prio) {
+            document.getElementById('encomenda-id').value = id;
+            document.getElementById('novo-nome').value = nome;
+            document.getElementById('nova-data').value = data;
+            document.getElementById('novo-peso').value = peso;
+            document.getElementById('nova-qtd').value = qtd;
+            document.getElementById('nova-prio').value = prio;
+
+            const btn = document.getElementById('btn-submit');
+            btn.innerHTML = "💾 Atualizar Encomenda";
+            btn.classList.remove('bg-green-600', 'hover:bg-green-700');
+            btn.classList.add('bg-blue-600', 'hover:bg-blue-700');
+            
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // Função unificada para Salvar (Cadastrar ou Atualizar)
+        async function salvarEncomenda(event) {
             event.preventDefault(); 
 
+            const id = document.getElementById('encomenda-id').value;
             const payload = {
                 nome: document.getElementById('novo-nome').value,
                 data_postagem: document.getElementById('nova-data').value,
@@ -165,50 +187,71 @@
                 prioridade: parseInt(document.getElementById('nova-prio').value)
             };
 
+            const metodo = id ? 'PUT' : 'POST';
+            const url = id ? `http://localhost:8000/encomendas/${id}` : 'http://localhost:8000/encomendas';
+
             try {
-                const resposta = await fetch('http://localhost:8000/encomendas', {
-                    method: 'POST',
+                const resposta = await fetch(url, {
+                    method: metodo,
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(payload)
                 });
 
                 if (resposta.ok) {
                     document.getElementById('form-cadastro').reset();
-                    // Após cadastrar, reordena automaticamente para mostrar o novo item
+                    document.getElementById('encomenda-id').value = "";
+                    
+                    const btn = document.getElementById('btn-submit');
+                    btn.innerHTML = "+ Cadastrar Encomenda no Sistema";
+                    btn.classList.remove('bg-blue-600', 'hover:bg-blue-700');
+                    btn.classList.add('bg-green-600', 'hover:bg-green-700');
+
                     ordenar(); 
                 } else {
-                    alert("Erro nos dados. Verifique os campos.");
+                    alert("Erro nos dados enviados.");
                 }
             } catch (error) {
-                alert("Erro ao enviar cadastro.");
+                alert("Erro ao conectar com o servidor.");
+            }
+        }
+
+        // Função para remover uma encomenda
+        async function deletarEncomenda(id) {
+            if(!confirm("Tem certeza que deseja excluir esta encomenda?")) return;
+
+            try {
+                const resposta = await fetch(`http://localhost:8000/encomendas/${id}`, {
+                    method: 'DELETE'
+                });
+
+                if (resposta.ok) {
+                    ordenar();
+                } else {
+                    alert("Erro ao excluir.");
+                }
+            } catch (error) {
+                alert("Erro de conexão.");
             }
         }
         
-        // Inicializa a tabela com a ordenação padrão (ID) ao carregar a página
-        window.onload = ordenar;
-
-        // Função do Teste de Estresse
         async function gerarMassaTeste(quantidade) {
-            // Confirmação para evitar cliques acidentais
-            if(!confirm(`Tem certeza que deseja injetar ${quantidade} encomendas aleatórias no sistema?`)) return;
+            if(!confirm(`Deseja injetar ${quantidade} encomendas aleatórias?`)) return;
 
             try {
-                // Chama a nova rota do backend
                 const resposta = await fetch(`http://localhost:8000/gerar-teste/${quantidade}`, {
                     method: 'POST'
                 });
 
                 if (resposta.ok) {
-                    alert(`${quantidade} itens gerados! Prepare-se para ver a diferença de performance.`);
-                    // Chama a ordenação para atualizar a tabela com os 1000+ itens
+                    alert(`${quantidade} itens gerados!`);
                     ordenar();
-                } else {
-                    alert("Erro ao gerar dados.");
                 }
             } catch (error) {
-                alert("Erro ao comunicar com o servidor.");
+                alert("Erro ao gerar dados.");
             }
         }
+
+        window.onload = ordenar;
     </script>
 </body>
 </html>
