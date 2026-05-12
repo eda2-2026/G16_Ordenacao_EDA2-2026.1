@@ -100,3 +100,7 @@ Depois acesse:
 
 - Se o arquivo `dados.json` existir, ele é carregado no início; caso contrário, o sistema começa vazio.
 - A rota `/ordenar` retorna também o tempo de execução da ordenação em `tempo_ms`.
+
+## Vídeo de apresentação
+
+https://youtu.be/R_nFwu1YovQ
